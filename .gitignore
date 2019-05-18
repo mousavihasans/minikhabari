@@ -1,13 +1,7 @@
 .idea/
-node_modules/
 *.pyc
 ~*
 venv/
 local_settings.py
 db.sqlite3
-bot/local.ini
-bot/application-build-*
-bot/linux_bot
-tmp/
 media/
-dist/
