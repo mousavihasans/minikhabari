@@ -24,6 +24,9 @@ class News(models.Model):
     def __str__(self):
         return str(self.source.label+'-'+self.title[0:49])
 
+    class Meta:
+        verbose_name_plural = "News"
+
 
 class ErrorTracker(models.Model):
     error_name = models.CharField(max_length=300)

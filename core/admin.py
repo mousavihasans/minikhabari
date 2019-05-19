@@ -1,38 +1,33 @@
 from django.contrib import admin, messages
 from django.contrib.admin.decorators import register
 
-from core.models import NewsSource, News
+from core.models import NewsSource, News, ErrorTracker
 
-# from celery.task.schedules import crontab
-# from celery.decorators import periodic_task
-#
-# def crawling_news()
-#
-#     @periodic_task(run_every=(crontab(second='*/15')), name="some_task", ignore_result=True)
-#     def some_task():
-
-
-# do something
 
 @register(NewsSource)
 class NewsSourceAdmin(admin.ModelAdmin):
     list_display = ('label', 'url', 'active', 'last_crawl_date')
-    # readonly_fields = ('title',)
+    readonly_fields = ('active', 'last_crawl_date')
 
-    def start_schedule_crawling(self, request, queryset):
-        if len(queryset) != 1:
-            self.message_user(request, 'please select 1 news source.', level=messages.ERROR)
-            return
-        # crawling_news()
+    def active_sources(self, request, queryset):
+        for obj in queryset:
+            obj.active = True
+            obj.save()
+        self.message_user(request, "Selected sources' state has been changed to active", level=messages.ERROR)
 
-    start_schedule_crawling.short_description = "Start Crawling news every 5 minutes"
+    active_sources.short_description = "Active selected sources for crawling"
 
-    actions = [start_schedule_crawling]
+    actions = [active_sources]
 
 
 @register(News)
 class NewsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('url', 'source', 'published_at', 'crawled_at')
+
+
+@register(ErrorTracker)
+class ErrorTrackerAdmin(admin.ModelAdmin):
+    list_display = ('error_name', 'occurred_at')
 
 
 
