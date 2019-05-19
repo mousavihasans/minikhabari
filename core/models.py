@@ -23,3 +23,9 @@ class News(models.Model):
 
     def __str__(self):
         return str(self.source.label+'-'+self.title[0:49])
+
+
+class ErrorTracker(models.Model):
+    error_name = models.CharField(max_length=300)
+    occurred_at = models.DateTimeField(default=now)
+    extra_data = models.TextField(blank=True, null=True)

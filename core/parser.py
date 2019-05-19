@@ -93,5 +93,5 @@ def isna_parser(content: str) -> list:
             else:
                 temp_array.append(item)
 
-    print(content)
+    # print(content)
     return content

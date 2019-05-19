@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 from celery import task
 
-from core.models import NewsSource, News
+from core.models import NewsSource, News, ErrorTracker
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now
 
@@ -13,7 +13,6 @@ from core.parser import isna_parser
 
 @task()
 def news_crawler():
-    print(000000000000)
     sources = NewsSource.objects.filter(active=True)
     for source in sources:
         resp = requests.get(source.url)
@@ -26,15 +25,14 @@ def news_crawler():
             url_handler.delay(news_link, source.id)
 
 
-
 @task(name='isna_parser')
 def url_handler(url: str, source_id: int):
-    # check url is crawled
+    # check whether the url is crawled
     duplicate_news = News.objects.filter(url=url).count()
-    # crawl and make models
     if duplicate_news:
         return
 
+    # crawl and create models
     resp = requests.get(url)
     soup_lxml = BeautifulSoup(resp.content, features="lxml")
     title = soup_lxml.find('h1', class_='first-title')
@@ -62,3 +60,7 @@ def url_handler(url: str, source_id: int):
         )
     except Exception as e:
         print(e)
+        ErrorTracker.objects.create(
+            error_name=str(e),
+            extra_data=url
+        )
