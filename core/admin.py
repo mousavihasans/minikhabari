@@ -36,6 +36,7 @@ class NewsAdmin(admin.ModelAdmin):
 @register(ErrorTracker)
 class ErrorTrackerAdmin(admin.ModelAdmin):
     list_display = ('error_name', 'occurred_at')
+    list_filter = ('occurred_at',)
 
 
 
