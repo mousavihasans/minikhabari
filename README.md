@@ -6,6 +6,8 @@ A test project for crawling news! At the first phase, I focus on isna.ir
 * SQLite (It is not appropriate for production!)
 * celery
 * redis
+* requests
+* beautifulsoup
 
 ### Setup Project:
 
