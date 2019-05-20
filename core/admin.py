@@ -9,15 +9,23 @@ class NewsSourceAdmin(admin.ModelAdmin):
     list_display = ('label', 'url', 'active', 'last_crawl_date')
     readonly_fields = ('active', 'last_crawl_date')
 
-    def active_sources(self, request, queryset):
+    def activate_sources(self, request, queryset):
         for obj in queryset:
             obj.active = True
             obj.save()
         self.message_user(request, "Selected sources' state has been changed to active", level=messages.ERROR)
 
-    active_sources.short_description = "Active selected sources for crawling"
+    activate_sources.short_description = "Active selected sources for crawling"
 
-    actions = [active_sources]
+    def deactivate_sources(self, request, queryset):
+        for obj in queryset:
+            obj.active = False
+            obj.save()
+        self.message_user(request, "Selected sources' state has been changed to active", level=messages.ERROR)
+
+    deactivate_sources.short_description = "Active selected sources for crawling"
+
+    actions = [activate_sources, deactivate_sources]
 
 
 @register(News)
