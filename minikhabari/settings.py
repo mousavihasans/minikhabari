@@ -85,10 +85,6 @@ DATABASES = {
     }
 }
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'Asia/Tehran'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -114,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -136,13 +132,13 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'Africa/Nairobi'
+
+SCHEDULED_TIME_PERIOD = 5  # unit is minute
 
 # Other Celery settings
-print('celery beat starts!!!')
 CELERYBEAT_SCHEDULE = { # the True config is without _
     'news-crawler-task': {
         'task': 'core.tasks.news_crawler',
-        'schedule': timedelta(seconds=60),
+        'schedule': timedelta(seconds=(SCHEDULED_TIME_PERIOD*60)+1),
     },
 }

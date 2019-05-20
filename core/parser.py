@@ -4,15 +4,14 @@ import re
 def isna_parser(content: str) -> list:
     # extract information and return data for saving in the News model
     # now just parse <p>, <strong>, <img>
-    # todo: parse video
+    # todo: parse videos
+    # todo: parse html tables
     # todo: parse other tags
     # return jsonify data
 
     array = []
     temp_var = ''
     open_tag = False
-    # remove outer tag
-    content = content[46:-6]
 
     # put tags and texts in arrays
     for char in content:
@@ -63,6 +62,8 @@ def isna_parser(content: str) -> list:
 
         elif item[0:7] == '<strong':
             if len(temp_array) > 0:
+                if temp_dict == {}:
+                    temp_dict['p'] = []
                 temp_dict[current_tag].append({'normal': ' '.join(temp_array)})
                 temp_array = []
         elif item[0:8] == '</strong':
@@ -77,6 +78,8 @@ def isna_parser(content: str) -> list:
             pass
         elif item[0:4] == '<img':
             if len(temp_array) > 0:  # todo: should save current tag state
+                if temp_dict == {}:
+                    temp_dict['p'] = []
                 temp_dict[current_tag].append({'normal': ' '.join(temp_array)})
                 temp_array = []
             matches = re.search('src="([^"]+)"', item)
